@@ -24,7 +24,6 @@
 
   .screen { position: fixed; inset: 0; z-index: 100; }
 
-  /* ============ 主菜单 ============ */
   #menuScreen { overflow: hidden; background: linear-gradient(180deg,#fdf6ec,#f0e4d4); }
   .menu-cat-bg {
     position: absolute; top: 0; left: 0; right: 0; bottom: 260px;
@@ -59,7 +58,6 @@
   }
   .menu-buttons button:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  /* ============ 存档选择 ============ */
   #saveSelectScreen {
     display: flex; align-items: center; justify-content: center;
     background: rgba(40,32,26,0.5);
@@ -75,18 +73,13 @@
     to   { transform: scale(1); opacity: 1; }
   }
   .save-box h2 { font-size: 20px; margin-bottom: 16px; text-align: center; color: #4a3c30; }
-
   #saveSlots { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
-
   .save-slot {
     position: relative;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 16px;
-    background: #faf6f0;
-    border: 1px solid #e8dfd3;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.15s;
+    padding: 14px 16px; background: #faf6f0;
+    border: 1px solid #e8dfd3; border-radius: 12px;
+    cursor: pointer; transition: all 0.15s;
   }
   .save-slot:hover { background: #f2e9dd; border-color: #c98d5e; transform: translateY(-1px); }
   .save-slot.empty { border-style: dashed; opacity: 0.85; }
@@ -99,7 +92,6 @@
     cursor: pointer; transition: all 0.15s;
   }
   .delete-slot:hover { color: #e74c3c; border-color: #e74c3c; background: #fff; }
-
   .save-box .bottom-btns { display: flex; gap: 8px; }
   .save-box .bottom-btns button {
     flex: 1; padding: 11px; font-size: 14px; font-family: inherit;
@@ -109,7 +101,6 @@
   }
   .save-box .bottom-btns button:hover { background: #f2e9dd; border-color: #c98d5e; }
 
-  /* ============ 开场动画 ============ */
   #introScreen {
     background: #1a1512; color: #f5ebe0;
     display: flex; align-items: center; justify-content: center;
@@ -118,7 +109,7 @@
   #introVideo {
     position: absolute; inset: 0;
     width: 100%; height: 100%;
-    object-fit: contain;             /* ★ 改为 contain，手机端完整显示 */
+    object-fit: contain;
     background: #1a1512;
     z-index: 1; opacity: 0; transition: opacity 0.4s ease;
     pointer-events: none;
@@ -140,7 +131,6 @@
   }
   #skipIntroBtn:hover { background: rgba(0,0,0,0.6); }
 
-  /* ============ 游戏界面 ============ */
   #gameScreen { background: #f6f1ea; overflow-y: auto; padding: 20px; }
   #app { max-width: 1040px; margin: 0 auto; }
 
@@ -213,7 +203,7 @@
   }
   .video-slot .video-hint strong { display: block; font-size: 15px; margin-bottom: 4px; }
   .video-slot .video-hint small { font-size: 11px; opacity: 0.7; }
-  /* ★ 视频播放时隐藏提示 */
+  /* CSS 备份：视频播放时隐藏提示 */
   .video-slot.playing .video-hint { display: none; }
   .video-slot .skip-btn {
     position: absolute; top: 8px; right: 8px; z-index: 10;
@@ -360,7 +350,6 @@
     animation: pop 0.2s ease;
   }
 
-  /* ============ 手机端适配 ============ */
   @media (max-width: 720px) {
     body { padding: 12px; }
     #layout { grid-template-columns: 1fr; }
@@ -371,20 +360,9 @@
     #pet { right: 12px; bottom: 12px; }
     #petBody { font-size: 48px; }
     #gameSettingsBtn, #menuSettingsBtn { top: 16px; right: 16px; width: 40px; height: 40px; }
-
-    /* ★ 手机端开场动画完整显示 */
-    #introVideo {
-      object-fit: contain;
-      background: #1a1512;
-    }
-    /* ★ 手机端视频区矮一点，避免占满屏幕 */
-    .video-slot {
-      height: 140px;
-    }
-    /* ★ 手机端主菜单视频保持 cover，避免黑边影响观感 */
-    .menu-cat-bg {
-      object-fit: cover;
-    }
+    #introVideo { object-fit: contain; background: #1a1512; }
+    .video-slot { height: 140px; }
+    .menu-cat-bg { object-fit: cover; }
   }
 </style>
 </head>
@@ -571,29 +549,22 @@ let masterVolume = 5;
 let unlockedVideos = [];
 let currentSlot = 1;
 
+/* ★ 全局视频注册表：用于音量同步和清理 */
+const activeVideos = [];
+
 const SAVE_SLOT_KEYS = [
-  'catDesignGameSave_v9_slot1',
-  'catDesignGameSave_v9_slot2',
-  'catDesignGameSave_v9_slot3'
+  'catDesignGameSave_v10_slot1',
+  'catDesignGameSave_v10_slot2',
+  'catDesignGameSave_v10_slot3'
 ];
 const VOLUME_KEY = 'catDesignGameVolume';
-const COLLECT_KEY = 'catDesignGameCollection_v9';
+const COLLECT_KEY = 'catDesignGameCollection_v10';
 
 const INITIAL = {
-  software: 10,
-  design: 10,
-  expression: 35,
-  inspiration: 50,
-  fame: 0,
-  money: 100,
-  fullness: 80,
-  energy: 100,
-  cleanliness: 80,
-  understanding: 20,
-  day: 1,
-  drawStreak: 0,
-  didDrawToday: false,
-  humanInteraction: 0
+  software: 10, design: 10, expression: 35, inspiration: 50,
+  fame: 0, money: 100, fullness: 80, energy: 100,
+  cleanliness: 80, understanding: 20, day: 1,
+  drawStreak: 0, didDrawToday: false, humanInteraction: 0
 };
 
 const STAT_DEFS = [
@@ -612,119 +583,60 @@ const STAT_DEFS = [
 const EFF_KEYS = ['software', 'design', 'inspiration', 'money'];
 
 const VIDEO_LIBRARY = {
-  act_study:       { name: '学习软件',       file: 'act_study.mp4',       desc: '猫在敲键盘' },
-  act_tutor:       { name: '请老师辅导',     file: 'act_tutor.mp4',       desc: '猫和老师对话' },
-  act_draw:        { name: '接单画稿',       file: 'act_draw.mp4',        desc: '猫在数位板上画' },
-  act_publish:     { name: '发布作品',       file: 'act_publish.mp4',     desc: '猫按下发布键' },
-  act_rest:        { name: '休息',           file: 'act_rest.mp4',        desc: '猫吃饭睡觉' },
-  act_groom:       { name: '舔毛',           file: 'act_groom.mp4',       desc: '猫舔毛' },
-  act_yarn:        { name: '自己玩毛球',     file: 'act_yarn.mp4',        desc: '猫追毛球' },
-  act_play:        { name: '与人类玩逗猫棒', file: 'act_play.mp4',        desc: '猫抓逗猫棒' },
-  act_talk:        { name: '与人类交流',     file: 'act_talk.mp4',        desc: '猫喵喵叫' },
-  act_can:         { name: '吃罐罐',         file: 'act_can.mp4',         desc: '猫吃罐头' },
-
-  ev_crash:        { name: '事件·软件崩溃',  file: 'ev_crash.mp4',        desc: '屏幕黑掉' },
-  ev_revise:       { name: '事件·甲方改稿',  file: 'ev_revise.mp4',       desc: '聊天框' },
-  ev_driver:       { name: '事件·驱动失灵',  file: 'ev_driver.mp4',       desc: '数位板失灵' },
-  ev_blank:        { name: '事件·灵感枯竭',  file: 'ev_blank.mp4',        desc: '空白画布' },
-  ev_viral:        { name: '事件·作品爆火',  file: 'ev_viral.mp4',        desc: '手机屏幕' },
-  ev_discover:     { name: '事件·人类发现',  file: 'ev_discover.mp4',     desc: '人类震惊' },
-  ev_bell:         { name: '事件·铃铛',      file: 'ev_bell.mp4',         desc: '铃铛' },
-  ev_cute:         { name: '事件·作品被夸赞',file: 'ev_cute.mp4',         desc: '朋友圈' },
-  ev_shoot:        { name: '事件·被拍视频',  file: 'ev_shoot.mp4',        desc: '手机镜头' },
-  ev_name:         { name: '事件·名字',      file: 'ev_name.mp4',         desc: '署名' },
-
-  end_creator:     { name: '结局·被承认的创作者猫', file: 'end_creator.mp4',     desc: '被承认' },
-  end_influencer:  { name: '结局·被包装的网红猫',   file: 'end_influencer.mp4',  desc: '被包装' },
-  end_pet:         { name: '结局·被爱的宠物猫',     file: 'end_pet.mp4',         desc: '被爱' },
-  end_supported:   { name: '结局·被支持的猫',       file: 'end_supported.mp4',   desc: '❤️满' },
-  end_independent: { name: '结局·独立的猫',         file: 'end_independent.mp4', desc: '独立' }
+  act_study:       { name: '学习软件',       file: 'act_study.mp4' },
+  act_tutor:       { name: '请老师辅导',     file: 'act_tutor.mp4' },
+  act_draw:        { name: '接单画稿',       file: 'act_draw.mp4' },
+  act_publish:     { name: '发布作品',       file: 'act_publish.mp4' },
+  act_rest:        { name: '休息',           file: 'act_rest.mp4' },
+  act_groom:       { name: '舔毛',           file: 'act_groom.mp4' },
+  act_yarn:        { name: '自己玩毛球',     file: 'act_yarn.mp4' },
+  act_play:        { name: '与人类玩逗猫棒', file: 'act_play.mp4' },
+  act_talk:        { name: '与人类交流',     file: 'act_talk.mp4' },
+  act_can:         { name: '吃罐罐',         file: 'act_can.mp4' },
+  ev_crash:        { name: '事件·软件崩溃',  file: 'ev_crash.mp4' },
+  ev_revise:       { name: '事件·甲方改稿',  file: 'ev_revise.mp4' },
+  ev_driver:       { name: '事件·驱动失灵',  file: 'ev_driver.mp4' },
+  ev_blank:        { name: '事件·灵感枯竭',  file: 'ev_blank.mp4' },
+  ev_viral:        { name: '事件·作品爆火',  file: 'ev_viral.mp4' },
+  ev_discover:     { name: '事件·人类发现',  file: 'ev_discover.mp4' },
+  ev_bell:         { name: '事件·铃铛',      file: 'ev_bell.mp4' },
+  ev_cute:         { name: '事件·作品被夸赞',file: 'ev_cute.mp4' },
+  ev_shoot:        { name: '事件·被拍视频',  file: 'ev_shoot.mp4' },
+  ev_name:         { name: '事件·名字',      file: 'ev_name.mp4' },
+  end_creator:     { name: '结局·被承认的创作者猫', file: 'end_creator.mp4' },
+  end_influencer:  { name: '结局·被包装的网红猫',   file: 'end_influencer.mp4' },
+  end_pet:         { name: '结局·被爱的宠物猫',     file: 'end_pet.mp4' },
+  end_supported:   { name: '结局·被支持的猫',       file: 'end_supported.mp4' },
+  end_independent: { name: '结局·独立的猫',         file: 'end_independent.mp4' }
 };
 
-/* ================================================================
-   行动
-   ================================================================ */
 const ACTIONS = [
-  { key: '学习软件',
-    cost: { energy: 15 },
-    gain: { software: 3, design: 1, expression: 5 },
+  { key: '学习软件', cost: { energy: 15 }, gain: { software: 3, design: 1, expression: 5 },
     inspCost: 10, inspBoost: { software: 5, design: 2, expression: 5 },
-    videoId: 'act_study',
-    human: '猫猫又在键盘上踩来踩去，真可爱。',
-    cat:   '你跟着教程练了一下午。' },
-
-  { key: '请老师辅导',
-    cost: { energy: 15, money: 30 },
-    gain: { software: 5, design: 2, expression: 5 },
+    videoId: 'act_study', human: '猫猫又在键盘上踩来踩去，真可爱。', cat: '你跟着教程练了一下午。' },
+  { key: '请老师辅导', cost: { energy: 15, money: 30 }, gain: { software: 5, design: 2, expression: 5 },
     inspCost: 15, inspBoost: { software: 8, design: 3, expression: 5 },
-    videoId: 'act_tutor',
-    human: '猫猫今天一直在盯着屏幕，好认真。',
-    cat:   '你花钱请了老师辅导。' },
-
-  { key: '接单画稿',
-    cost: { energy: 25, expression: 8 },
-    gain: { design: 2, software: 1, money: 45, fame: 1 },
+    videoId: 'act_tutor', human: '猫猫今天一直在盯着屏幕，好认真。', cat: '你花钱请了老师辅导。' },
+  { key: '接单画稿', cost: { energy: 25, expression: 8 }, gain: { design: 2, software: 1, money: 45, fame: 1 },
     inspCost: 10, inspBoost: { design: 3, software: 2, money: 65, fame: 1 },
-    videoId: 'act_draw',
-    human: '猫猫又在数位板上踩来踩去。',
-    cat:   '你完成一单画稿。' },
-
-  { key: '发布作品',
-    cost: { energy: 10 },
-    gain: { design: 2, expression: 5, fame: 1, money: 10 },
+    videoId: 'act_draw', human: '猫猫又在数位板上踩来踩去。', cat: '你完成一单画稿。' },
+  { key: '发布作品', cost: { energy: 10 }, gain: { design: 2, expression: 5, fame: 1, money: 10 },
     inspCost: 5, inspBoost: { design: 3, expression: 5, fame: 1, money: 15 },
-    videoId: 'act_publish',
-    human: '猫猫在屏幕上蹭来蹭去。',
-    cat:   '你把作品发到平台。' },
-
-  { key: '休息',
-    cost: {},
-    gain: { energy: 30, fullness: 30, cleanliness: -5, inspiration: 5 },
-    videoId: 'act_rest',
-    human: '猫猫吃了饭，又睡了一觉。',
-    cat:   '你吃了饭睡了一觉。' },
-
-  { key: '舔毛',
-    cost: { energy: 5 },
-    gain: { cleanliness: 20, inspiration: 3 },
-    videoId: 'act_groom',
-    human: '猫猫舔毛的样子真优雅。',
-    cat:   '你把自己收拾干净。' },
-
-  { key: '自己玩毛球',
-    cost: { energy: 10 },
-    gain: { inspiration: 8, fullness: -5, energy: 5 },
-    videoId: 'act_yarn',
-    human: '猫猫又在追着自己的毛球跑。',
-    cat:   '你自己玩了一会儿毛球，精神了一点。' },
-
-  { key: '与人类玩逗猫棒',
-    cost: { energy: 10 },
-    gain: { inspiration: 8, fullness: -5, understanding: 1, energy: 5 },
-    humanInteract: true,
-    videoId: 'act_play',
-    human: '猫猫跳起来抓逗猫棒，好可爱。',
-    cat:   '你和人类玩了一会儿逗猫棒。' },
-
-  { key: '与人类交流',
-    cost: { energy: 10 },
-    gain: { understanding: 5, inspiration: -3 },
-    humanInteract: true,
-    videoId: 'act_talk',
-    human: '猫猫叫了一声，是不是饿了？',
-    cat:   '你试图和人类交流。' },
-
-  { key: '吃罐罐',
-    cost: { money: 15 },
-    gain: { energy: 15, inspiration: 15, fullness: 25 },
-    videoId: 'act_can',
-    human: '猫猫吃罐头吃得吧唧吧唧。',
-    cat:   '你吃了罐罐，精神满满。' }
+    videoId: 'act_publish', human: '猫猫在屏幕上蹭来蹭去。', cat: '你把作品发到平台。' },
+  { key: '休息', cost: {}, gain: { energy: 30, fullness: 30, cleanliness: -5, inspiration: 5 },
+    videoId: 'act_rest', human: '猫猫吃了饭，又睡了一觉。', cat: '你吃了饭睡了一觉。' },
+  { key: '舔毛', cost: { energy: 5 }, gain: { cleanliness: 20, inspiration: 3 },
+    videoId: 'act_groom', human: '猫猫舔毛的样子真优雅。', cat: '你把自己收拾干净。' },
+  { key: '自己玩毛球', cost: { energy: 10 }, gain: { inspiration: 8, fullness: -5, energy: 5 },
+    videoId: 'act_yarn', human: '猫猫又在追着自己的毛球跑。', cat: '你自己玩了一会儿毛球，精神了一点。' },
+  { key: '与人类玩逗猫棒', cost: { energy: 10 }, gain: { inspiration: 8, fullness: -5, understanding: 1, energy: 5 },
+    humanInteract: true, videoId: 'act_play', human: '猫猫跳起来抓逗猫棒，好可爱。', cat: '你和人类玩了一会儿逗猫棒。' },
+  { key: '与人类交流', cost: { energy: 10 }, gain: { understanding: 5, inspiration: -3 },
+    humanInteract: true, videoId: 'act_talk', human: '猫猫叫了一声，是不是饿了？', cat: '你试图和人类交流。' },
+  { key: '吃罐罐', cost: { money: 15 }, gain: { energy: 15, inspiration: 15, fullness: 25 },
+    videoId: 'act_can', human: '猫猫吃罐头吃得吧唧吧唧。', cat: '你吃了罐罐，精神满满。' }
 ];
 
-/* ================================================================
-   事件
-   ================================================================ */
 const EVENTS = [
   { id: 'crash', title: '软件崩溃', weight: 1, videoId: 'ev_crash',
     text: '渲染到 90%，软件突然闪退。你盯着屏幕，尾巴僵在半空。',
@@ -1026,7 +938,9 @@ function showToast(msg) {
   setTimeout(() => t.remove(), 1600);
 }
 
-/* 让视频跟随 masterVolume */
+/* ================================================================
+   ★ 音量控制（所有视频统一管理）
+   ================================================================ */
 function applyVolumeToVideo(videoEl) {
   if (!videoEl) return;
   if (masterVolume <= 0) {
@@ -1038,7 +952,8 @@ function applyVolumeToVideo(videoEl) {
   }
 }
 function syncAllVideosVolume() {
-  document.querySelectorAll('video').forEach(v => {
+  activeVideos.forEach(v => {
+    /* 主菜单循环视频始终静音 */
     if (v.id === 'menuIdleVideo' || v.classList.contains('menu-cat-bg')) {
       v.muted = true;
       v.volume = 0;
@@ -1062,10 +977,7 @@ function saveToSlot(n, silent) {
   if (!state) return;
   const slotData = { state: state, savedAt: Date.now() };
   localStorage.setItem(SAVE_SLOT_KEYS[n - 1], JSON.stringify(slotData));
-  if (!silent) {
-    playTone(660, 0.12);
-    showToast('已保存到存档 ' + n);
-  }
+  if (!silent) { playTone(660, 0.12); showToast('已保存到存档 ' + n); }
 }
 function loadFromSlot(n) {
   const data = getSlotData(n);
@@ -1089,7 +1001,6 @@ function renderSaveSlots() {
     const div = document.createElement('div');
     div.className = 'save-slot' + (data ? '' : ' empty');
     div.onclick = () => onSlotClick(i);
-
     let info = '<strong>存档 ' + i + '</strong>';
     if (data && data.state) {
       const s = data.state;
@@ -1099,7 +1010,6 @@ function renderSaveSlots() {
     } else {
       info += '<small>空存档位 · 点击开始新游戏</small>';
     }
-
     div.innerHTML =
       '<div class="save-slot-info">' + info + '</div>' +
       (data
@@ -1111,10 +1021,7 @@ function renderSaveSlots() {
 function onSlotClick(n) {
   const data = getSlotData(n);
   if (data) {
-    if (!loadFromSlot(n)) {
-      showToast('存档损坏');
-      return;
-    }
+    if (!loadFromSlot(n)) { showToast('存档损坏'); return; }
     playTone(880, 0.1);
     showScreen('game');
     document.getElementById('log').innerHTML = '';
@@ -1179,13 +1086,23 @@ function closeCollection() {
 }
 
 /* ================================================================
-   视频播放：播完/跳过 → 回调（受音量控制，播放时隐藏提示）
+   ★ 视频播放核心（修复提示遮挡 + 音画同步 + 音量实时）
    ================================================================ */
 function playVideoThen(videoId, slotId, hintId, nextCallback, customText) {
   const slot = document.getElementById(slotId);
   const hint = document.getElementById(hintId);
 
-  slot.querySelectorAll('video, .skip-btn').forEach(el => el.remove());
+  /* 清理旧视频和跳过键 */
+  slot.querySelectorAll('video, .skip-btn').forEach(el => {
+    const idx = activeVideos.indexOf(el);
+    if (idx !== -1) activeVideos.splice(idx, 1);
+    try { el.pause(); } catch (e) {}
+    el.remove();
+  });
+
+  /* ★ 直接隐藏视频提示，避免遮挡 */
+  const hintEl = slot.querySelector('.video-hint');
+  if (hintEl) hintEl.style.display = 'none';
 
   const v = VIDEO_LIBRARY[videoId];
   const src = v ? 'assets/video/' + v.file : '';
@@ -1193,16 +1110,13 @@ function playVideoThen(videoId, slotId, hintId, nextCallback, customText) {
   const videoEl = document.createElement('video');
   videoEl.playsInline = true;
   videoEl.preload = 'auto';
-  /* ★ 移动端兼容属性，减少卡顿 */
   videoEl.setAttribute('webkit-playsinline', 'true');
   videoEl.setAttribute('x5-playsinline', 'true');
   videoEl.setAttribute('x5-video-player-type', 'h5');
   videoEl.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;';
   applyVolumeToVideo(videoEl);
   slot.appendChild(videoEl);
-
-  /* ★ 隐藏“播放中”提示 */
-  slot.classList.add('playing');
+  activeVideos.push(videoEl);
 
   const skipBtn = document.createElement('button');
   skipBtn.className = 'skip-btn';
@@ -1216,10 +1130,11 @@ function playVideoThen(videoId, slotId, hintId, nextCallback, customText) {
     if (done) return;
     done = true;
     try { videoEl.pause(); } catch (e) {}
+    const idx = activeVideos.indexOf(videoEl);
+    if (idx !== -1) activeVideos.splice(idx, 1);
     videoEl.remove();
     skipBtn.remove();
-    /* ★ 恢复“播放中”提示 */
-    slot.classList.remove('playing');
+    if (hintEl) hintEl.style.display = '';
     if (nextCallback) nextCallback();
   }
 
@@ -1227,18 +1142,24 @@ function playVideoThen(videoId, slotId, hintId, nextCallback, customText) {
 
   let realVideo = false;
   videoEl.src = src;
-  videoEl.addEventListener('loadeddata', () => {
+
+  /* ★ 等 canplaythrough，确保音画就绪再播 */
+  videoEl.addEventListener('canplaythrough', () => {
     realVideo = true;
+    /* 重置播放位置，防止音画不同步 */
+    try { videoEl.currentTime = 0; } catch (e) {}
     videoEl.play().catch(() => {});
-  });
+  }, { once: true });
+
   videoEl.addEventListener('ended', finish);
   videoEl.addEventListener('error', () => {
     if (!realVideo) setTimeout(finish, 1200);
   });
 
+  /* 兜底：2.5 秒还没加载成功就走模拟 */
   setTimeout(() => {
     if (!realVideo && !done) setTimeout(finish, 800);
-  }, 1500);
+  }, 2500);
 
   unlockVideo(videoId);
 }
@@ -1249,10 +1170,10 @@ function playVideoThen(videoId, slotId, hintId, nextCallback, customText) {
 function showScreen(name) {
   const screens = ['menuScreen', 'saveSelectScreen', 'introScreen', 'gameScreen'];
   screens.forEach(id => document.getElementById(id).classList.add('hidden'));
-  if (name === 'menu')         document.getElementById('menuScreen').classList.remove('hidden');
-  if (name === 'saveSelect')   document.getElementById('saveSelectScreen').classList.remove('hidden');
-  if (name === 'intro')        document.getElementById('introScreen').classList.remove('hidden');
-  if (name === 'game')         document.getElementById('gameScreen').classList.remove('hidden');
+  if (name === 'menu')       document.getElementById('menuScreen').classList.remove('hidden');
+  if (name === 'saveSelect') document.getElementById('saveSelectScreen').classList.remove('hidden');
+  if (name === 'intro')      document.getElementById('introScreen').classList.remove('hidden');
+  if (name === 'game')       document.getElementById('gameScreen').classList.remove('hidden');
 
   document.getElementById('menuSettingsBtn').classList.toggle('hidden', name !== 'menu');
   document.getElementById('gameSettingsBtn').classList.toggle('hidden', name !== 'game');
@@ -1264,6 +1185,12 @@ function showSaveSelect() {
 }
 function backToMenu() {
   playTone(500, 0.1);
+  /* ★ 清理所有正在播放的视频 */
+  activeVideos.forEach(v => {
+    try { v.pause(); } catch (e) {}
+    v.remove();
+  });
+  activeVideos.length = 0;
   document.getElementById('endingModal').classList.add('hidden');
   document.getElementById('eventModal').classList.add('hidden');
   document.getElementById('collectionModal').classList.add('hidden');
@@ -1271,7 +1198,7 @@ function backToMenu() {
 }
 
 /* ================================================================
-   开场动画（受音量控制）
+   开场动画
    ================================================================ */
 const INTRO_LINES = [
   '你是一只猫。',
@@ -1298,8 +1225,9 @@ function playIntro() {
   text.style.display = '';
   text.textContent = '';
   text.classList.remove('fade-in');
-
   applyVolumeToVideo(video);
+  /* 加到 activeVideos 以便音量同步 */
+  if (activeVideos.indexOf(video) === -1) activeVideos.push(video);
 
   let videoOk = false;
 
@@ -1312,9 +1240,7 @@ function playIntro() {
     video.play().catch(() => {});
   }
   function onEnded() { if (introActive) endIntro(); }
-  function onError() {
-    if (!videoOk && introActive) startTextIntro();
-  }
+  function onError() { if (!videoOk && introActive) startTextIntro(); }
 
   video.addEventListener('loadeddata', onLoaded, { once: true });
   video.addEventListener('ended', onEnded, { once: true });
@@ -1326,7 +1252,6 @@ function playIntro() {
     if (!videoOk && introActive) startTextIntro();
   }, 2000);
 }
-
 function startTextIntro() {
   if (!introActive) return;
   introVideoPlaying = false;
@@ -1335,7 +1260,6 @@ function startTextIntro() {
   introIdx = 0;
   showIntroLine();
 }
-
 function showIntroLine() {
   if (!introActive || introVideoPlaying) return;
   if (introIdx >= INTRO_LINES.length) { endIntro(); return; }
@@ -1347,7 +1271,6 @@ function showIntroLine() {
   introIdx++;
   introTimer = setTimeout(showIntroLine, 2000);
 }
-
 function endIntro() {
   if (!introActive) return;
   introActive = false;
@@ -1356,7 +1279,6 @@ function endIntro() {
   try { video.pause(); } catch (e) {}
   startGameWithNewState();
 }
-
 function startGameWithNewState() {
   state = Object.assign({}, INITIAL);
   gameEnded = false;
@@ -1372,7 +1294,7 @@ function startGameWithNewState() {
 }
 
 /* ================================================================
-   存档 / 读档（设置面板）
+   存档 / 读档
    ================================================================ */
 function saveGame() {
   if (!state) { showToast('还没有开始游戏'); return; }
@@ -1408,7 +1330,7 @@ function closeSettings() {
 }
 
 /* ================================================================
-   UI 渲染
+   UI
    ================================================================ */
 function updateUI() {
   if (!state) return;
@@ -1453,7 +1375,6 @@ function renderGameArea() {
   document.getElementById('idlePanel').classList.add('hidden');
   document.getElementById('schedulePanel').classList.add('hidden');
   document.getElementById('executingPanel').classList.add('hidden');
-
   if (phase === 'idle') {
     document.getElementById('idlePanel').classList.remove('hidden');
     updateUI();
@@ -1466,9 +1387,6 @@ function renderGameArea() {
   }
 }
 
-/* ================================================================
-   日程
-   ================================================================ */
 function getProjectedState() {
   let proj = { energy: state.energy, money: state.money };
   for (const s of schedule) {
@@ -1502,8 +1420,7 @@ function selectAction(idx) {
   if (empty === -1) return;
   if (!canAfford(idx)) {
     logLine('system', '精力或稿费不够，无法安排这个行动。');
-    playTone(300, 0.15);
-    return;
+    playTone(300, 0.15); return;
   }
   schedule[empty] = idx;
   playTone(720, 0.06);
@@ -1554,7 +1471,6 @@ function confirmSchedule() {
   executingIndex = 0;
   setTimeout(executeNextAction, 400);
 }
-
 function applyInspirationBoost(a, gainObj) {
   const result = { gain: {}, used: false };
   for (const k in gainObj) result.gain[k] = gainObj[k];
@@ -1567,27 +1483,19 @@ function applyInspirationBoost(a, gainObj) {
   }
   return result;
 }
-
 function executeNextAction() {
-  if (executingIndex >= 3) {
-    setTimeout(triggerDayEvents, 500);
-    return;
-  }
+  if (executingIndex >= 3) { setTimeout(triggerDayEvents, 500); return; }
   const actionIdx = schedule[executingIndex];
   const a = ACTIONS[actionIdx];
   const slotName = ['早', '中', '晚'][executingIndex];
 
   if (a.cost.energy && state.energy < a.cost.energy) {
     logLine('system', '【' + slotName + '】精力不够，' + a.key + '没做成。');
-    executingIndex++;
-    setTimeout(executeNextAction, 500);
-    return;
+    executingIndex++; setTimeout(executeNextAction, 500); return;
   }
   if (a.cost.money && state.money < a.cost.money) {
     logLine('system', '【' + slotName + '】稿费不够，' + a.key + '没做成。');
-    executingIndex++;
-    setTimeout(executeNextAction, 500);
-    return;
+    executingIndex++; setTimeout(executeNextAction, 500); return;
   }
 
   playVideoThen(a.videoId, 'executingVideoSlot', 'executingVideoHint', () => {
@@ -1596,7 +1504,6 @@ function executeNextAction() {
     setTimeout(executeNextAction, 400);
   }, a.key);
 }
-
 function applyActionEffect(actionIdx, slotName) {
   const a = ACTIONS[actionIdx];
   const eff = getEfficiency();
@@ -1606,39 +1513,31 @@ function applyActionEffect(actionIdx, slotName) {
     if (Math.random() > successRate) {
       state.energy -= a.cost.energy;
       state.expression -= a.cost.expression || 0;
-      clampStats();
-      updateUI();
+      clampStats(); updateUI();
       logLine('system', '【' + slotName + '】接单画稿');
       logLine('human', '【人类看到的】猫猫画了好久，但好像不太顺利。');
       logLine('cat',   '【猫实际做的】甲方退稿了，这一单白干。精力 -' + a.cost.energy + '，表现力下降。');
       return;
     }
   }
-
   for (const k in a.cost) state[k] -= a.cost[k];
-
   const boosted = applyInspirationBoost(a, a.gain);
-
   for (const k in boosted.gain) {
     let v = boosted.gain[k];
     if (v > 0 && EFF_KEYS.indexOf(k) !== -1) v = Math.max(1, Math.round(v * eff));
     state[k] += v;
   }
-
   const fameGain = boosted.gain.fame || 0;
   if (fameGain > 0 && Math.random() < 0.4) {
     const heartGain = 2 + Math.floor(Math.random() * 4);
     state.understanding += heartGain;
     logLine('heart', '有人注意到了你。❤️ +' + heartGain);
   }
-
   if (a.humanInteract) state.humanInteraction++;
-
   if (a.key === '与人类玩逗猫棒' && Math.random() < 0.3) {
     state.understanding += 3;
     logLine('heart', '你感觉人类好像懂了一点什么。❤️ +3');
   }
-
   if (a.key === '接单画稿') {
     state.drawStreak++;
     state.didDrawToday = true;
@@ -1646,9 +1545,7 @@ function applyActionEffect(actionIdx, slotName) {
     state.expression -= extraCost;
     logLine('express', '表现力额外 -' + extraCost + '（连续画稿 ' + state.drawStreak + ' 天）');
   }
-
-  clampStats();
-  updateUI();
+  clampStats(); updateUI();
   logLine('system', '【' + slotName + '】' + a.key + (boosted.used ? '（灵感迸发！）' : ''));
   logLine('human', '【人类看到的】' + a.human);
   logLine('cat',   '【猫实际做的】' + a.cat);
@@ -1678,12 +1575,8 @@ function triggerDayEvents() {
   eventIndex = 0;
   showNextEvent();
 }
-
 function showNextEvent() {
-  if (eventIndex >= eventQueue.length) {
-    endDayFlow();
-    return;
-  }
+  if (eventIndex >= eventQueue.length) { endDayFlow(); return; }
   const ev = eventQueue[eventIndex];
   const videoSlot = document.getElementById('eventVideoSlot');
   const box = document.getElementById('eventOptions');
@@ -1716,11 +1609,9 @@ function showNextEvent() {
     renderOptions();
   }
 }
-
 function applyEventOption(opt, ev) {
   document.getElementById('eventModal').classList.add('hidden');
   playTone(640, 0.1);
-
   const eff = getEfficiency();
   for (const k in opt.effect) {
     let v = opt.effect[k];
@@ -1728,16 +1619,11 @@ function applyEventOption(opt, ev) {
     state[k] += v;
   }
   if (ev && ev.humanInteract) state.humanInteraction++;
-  clampStats();
-  updateUI();
-
+  clampStats(); updateUI();
   logLine('human', '【人类看到的】' + opt.human);
   logLine('cat',   '【猫实际做的】' + opt.cat);
-  if (opt.effect.understanding && opt.effect.understanding > 0) {
-    logLine('heart', '❤️ +' + opt.effect.understanding);
-  }
+  if (opt.effect.understanding && opt.effect.understanding > 0) logLine('heart', '❤️ +' + opt.effect.understanding);
   if (opt.effect.fame) logLine('fame', '名气 +' + opt.effect.fame);
-
   eventIndex++;
   setTimeout(showNextEvent, 400);
 }
@@ -1747,10 +1633,8 @@ function applyEventOption(opt, ev) {
    ================================================================ */
 function endDayFlow() {
   const notes = [];
-
   state.energy += 25;
   notes.push('一夜休息，精力 +25。');
-
   if (!state.didDrawToday) {
     if (state.drawStreak > 0) {
       const refund = 8 + state.drawStreak * 2;
@@ -1762,22 +1646,14 @@ function endDayFlow() {
     }
     state.drawStreak = 0;
   }
-
   if (state.fullness < 30)    { state.inspiration -= 2; notes.push('肚子饿了，灵感 -2。'); }
   if (state.cleanliness < 30) { state.inspiration -= 1; notes.push('毛有点脏，灵感 -1。'); }
   if (state.energy < 20)      { notes.push('精力见底，明天效率会变低。'); }
-
   clampStats();
   notes.forEach(n => logLine('system', n));
   updateUI();
-
   saveToSlot(currentSlot, true);
-
-  if (state.day >= 7) {
-    setTimeout(showEnding, 600);
-    return;
-  }
-
+  if (state.day >= 7) { setTimeout(showEnding, 600); return; }
   state.day++;
   schedule = [null, null, null];
   phase = 'idle';
@@ -1790,9 +1666,7 @@ function endDayFlow() {
 function showEnding() {
   gameEnded = true;
   playTone(520, 0.5);
-
-  let ending;
-  let videoId;
+  let ending, videoId;
 
   if (state.software >= 40 && state.design >= 40 && state.expression >= 50) {
     ending = { title: '被承认的创作者猫',
@@ -1827,15 +1701,17 @@ function showEnding() {
     ' ｜ 稿费 ' + Math.round(state.money) + '<br>' +
     '❤️ ' + Math.round(state.understanding) +
     ' ｜ 人类互动 ' + state.humanInteraction + ' 次';
-
   document.getElementById('endingModal').classList.remove('hidden');
-  playVideoThen(videoId, 'endingVideoSlot', 'endingVideoHint', () => {
-    // 结局视频播完，无需操作
-  }, ending.title);
+  playVideoThen(videoId, 'endingVideoSlot', 'endingVideoHint', () => {}, ending.title);
 }
-
 function restart() {
   document.getElementById('endingModal').classList.add('hidden');
+  /* ★ 清理所有视频 */
+  activeVideos.forEach(v => {
+    try { v.pause(); } catch (e) {}
+    v.remove();
+  });
+  activeVideos.length = 0;
   state = null;
   playTone(880, 0.1);
   showScreen('intro');
@@ -1875,13 +1751,14 @@ function restart() {
 })();
 
 /* ================================================================
-   音量滑块（同时控制音效和视频）
+   音量滑块
    ================================================================ */
 document.getElementById('volumeSlider').addEventListener('input', function () {
   masterVolume = parseInt(this.value, 10) || 0;
   document.getElementById('volumeValue').textContent = masterVolume;
   localStorage.setItem(VOLUME_KEY, masterVolume);
   playTone(700, 0.05);
+  /* ★ 实时同步所有正在播放的视频 */
   syncAllVideosVolume();
 });
 
@@ -1892,6 +1769,13 @@ loadVolume();
 loadCollection();
 document.getElementById('volumeSlider').value = masterVolume;
 document.getElementById('volumeValue').textContent = masterVolume;
+/* 主菜单视频加入注册表（始终静音） */
+const menuIdle = document.getElementById('menuIdleVideo');
+if (menuIdle) {
+  menuIdle.muted = true;
+  menuIdle.volume = 0;
+  activeVideos.push(menuIdle);
+}
 showScreen('menu');
 </script>
 </body>
