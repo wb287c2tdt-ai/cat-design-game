@@ -117,7 +117,9 @@
   }
   #introVideo {
     position: absolute; inset: 0;
-    width: 100%; height: 100%; object-fit: cover;
+    width: 100%; height: 100%;
+    object-fit: contain;             /* ★ 改为 contain，手机端完整显示 */
+    background: #1a1512;
     z-index: 1; opacity: 0; transition: opacity 0.4s ease;
     pointer-events: none;
   }
@@ -211,6 +213,8 @@
   }
   .video-slot .video-hint strong { display: block; font-size: 15px; margin-bottom: 4px; }
   .video-slot .video-hint small { font-size: 11px; opacity: 0.7; }
+  /* ★ 视频播放时隐藏提示 */
+  .video-slot.playing .video-hint { display: none; }
   .video-slot .skip-btn {
     position: absolute; top: 8px; right: 8px; z-index: 10;
     padding: 5px 12px; font-size: 12px; font-family: inherit;
@@ -356,6 +360,7 @@
     animation: pop 0.2s ease;
   }
 
+  /* ============ 手机端适配 ============ */
   @media (max-width: 720px) {
     body { padding: 12px; }
     #layout { grid-template-columns: 1fr; }
@@ -366,6 +371,20 @@
     #pet { right: 12px; bottom: 12px; }
     #petBody { font-size: 48px; }
     #gameSettingsBtn, #menuSettingsBtn { top: 16px; right: 16px; width: 40px; height: 40px; }
+
+    /* ★ 手机端开场动画完整显示 */
+    #introVideo {
+      object-fit: contain;
+      background: #1a1512;
+    }
+    /* ★ 手机端视频区矮一点，避免占满屏幕 */
+    .video-slot {
+      height: 140px;
+    }
+    /* ★ 手机端主菜单视频保持 cover，避免黑边影响观感 */
+    .menu-cat-bg {
+      object-fit: cover;
+    }
   }
 </style>
 </head>
@@ -553,12 +572,12 @@ let unlockedVideos = [];
 let currentSlot = 1;
 
 const SAVE_SLOT_KEYS = [
-  'catDesignGameSave_v8_slot1',
-  'catDesignGameSave_v8_slot2',
-  'catDesignGameSave_v8_slot3'
+  'catDesignGameSave_v9_slot1',
+  'catDesignGameSave_v9_slot2',
+  'catDesignGameSave_v9_slot3'
 ];
 const VOLUME_KEY = 'catDesignGameVolume';
-const COLLECT_KEY = 'catDesignGameCollection_v8';
+const COLLECT_KEY = 'catDesignGameCollection_v9';
 
 const INITIAL = {
   software: 10,
@@ -1007,7 +1026,7 @@ function showToast(msg) {
   setTimeout(() => t.remove(), 1600);
 }
 
-/* 让所有视频跟随 masterVolume */
+/* 让视频跟随 masterVolume */
 function applyVolumeToVideo(videoEl) {
   if (!videoEl) return;
   if (masterVolume <= 0) {
@@ -1020,7 +1039,6 @@ function applyVolumeToVideo(videoEl) {
 }
 function syncAllVideosVolume() {
   document.querySelectorAll('video').forEach(v => {
-    // 主菜单循环视频保持静音
     if (v.id === 'menuIdleVideo' || v.classList.contains('menu-cat-bg')) {
       v.muted = true;
       v.volume = 0;
@@ -1161,7 +1179,7 @@ function closeCollection() {
 }
 
 /* ================================================================
-   视频播放：播完/跳过 → 回调（受音量控制）
+   视频播放：播完/跳过 → 回调（受音量控制，播放时隐藏提示）
    ================================================================ */
 function playVideoThen(videoId, slotId, hintId, nextCallback, customText) {
   const slot = document.getElementById(slotId);
@@ -1175,9 +1193,16 @@ function playVideoThen(videoId, slotId, hintId, nextCallback, customText) {
   const videoEl = document.createElement('video');
   videoEl.playsInline = true;
   videoEl.preload = 'auto';
+  /* ★ 移动端兼容属性，减少卡顿 */
+  videoEl.setAttribute('webkit-playsinline', 'true');
+  videoEl.setAttribute('x5-playsinline', 'true');
+  videoEl.setAttribute('x5-video-player-type', 'h5');
   videoEl.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;';
-  applyVolumeToVideo(videoEl);   // ★ 音量受控
+  applyVolumeToVideo(videoEl);
   slot.appendChild(videoEl);
+
+  /* ★ 隐藏“播放中”提示 */
+  slot.classList.add('playing');
 
   const skipBtn = document.createElement('button');
   skipBtn.className = 'skip-btn';
@@ -1193,6 +1218,8 @@ function playVideoThen(videoId, slotId, hintId, nextCallback, customText) {
     try { videoEl.pause(); } catch (e) {}
     videoEl.remove();
     skipBtn.remove();
+    /* ★ 恢复“播放中”提示 */
+    slot.classList.remove('playing');
     if (nextCallback) nextCallback();
   }
 
@@ -1272,7 +1299,6 @@ function playIntro() {
   text.textContent = '';
   text.classList.remove('fade-in');
 
-  // 让开场视频跟随音量
   applyVolumeToVideo(video);
 
   let videoOk = false;
