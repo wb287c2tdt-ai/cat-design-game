@@ -24,13 +24,50 @@
 
   .screen { position: fixed; inset: 0; z-index: 100; }
 
+  /* ============ 加载屏 ============ */
+  #loadingScreen {
+    position: fixed; inset: 0; z-index: 500;
+    background: linear-gradient(180deg,#fdf6ec,#f0e4d4);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .loading-box {
+    display: flex; flex-direction: column; align-items: center;
+    background: rgba(255,253,250,0.9);
+    padding: 30px 40px; border-radius: 22px;
+    border: 1px solid #e8dfd3;
+    box-shadow: 0 20px 60px rgba(80,60,40,0.12);
+    min-width: 320px;
+  }
+  .loading-cat { font-size: 64px; line-height: 1; animation: bob 2s ease-in-out infinite; margin-bottom: 12px; }
+  .loading-title { font-size: 16px; color: #4a3c30; margin-bottom: 18px; }
+  .loading-bar-wrap {
+    width: 240px; height: 8px; background: #efe7dc;
+    border-radius: 4px; overflow: hidden; margin-bottom: 10px;
+  }
+  .loading-bar {
+    height: 100%; width: 0%; border-radius: 4px;
+    background: linear-gradient(90deg,#c98d5e,#a06cd5);
+    transition: width 0.2s ease;
+  }
+  .loading-text { font-size: 12.5px; color: #9a8a7c; margin-bottom: 16px; }
+  .loading-skip {
+    padding: 8px 18px; font-size: 13px; font-family: inherit;
+    color: #b0998a; background: transparent;
+    border: 1px solid #e8dfd3; border-radius: 10px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .loading-skip:hover { color: #c98d5e; border-color: #c98d5e; }
+  @keyframes bob {
+    0%,100% { transform: translateY(0) rotate(-2deg); }
+    50%     { transform: translateY(-9px) rotate(2deg); }
+  }
+
+  /* ============ 主菜单 ============ */
   #menuScreen { overflow: hidden; background: linear-gradient(180deg,#fdf6ec,#f0e4d4); }
   .menu-cat-bg {
     position: absolute; top: 0; left: 0; right: 0; bottom: 260px;
-    width: 100%;
-    height: calc(100% - 260px);
-    object-fit: cover;
-    pointer-events: none;
+    width: 100%; height: calc(100% - 260px);
+    object-fit: cover; pointer-events: none;
     display: flex; align-items: center; justify-content: center;
     font-size: 50vmin; line-height: 1;
   }
@@ -58,6 +95,7 @@
   }
   .menu-buttons button:disabled { opacity: 0.4; cursor: not-allowed; }
 
+  /* ============ 存档选择 ============ */
   #saveSelectScreen {
     display: flex; align-items: center; justify-content: center;
     background: rgba(40,32,26,0.5);
@@ -101,6 +139,7 @@
   }
   .save-box .bottom-btns button:hover { background: #f2e9dd; border-color: #c98d5e; }
 
+  /* ============ 开场动画 ============ */
   #introScreen {
     background: #1a1512; color: #f5ebe0;
     display: flex; align-items: center; justify-content: center;
@@ -109,8 +148,7 @@
   #introVideo {
     position: absolute; inset: 0;
     width: 100%; height: 100%;
-    object-fit: contain;
-    background: #1a1512;
+    object-fit: contain; background: #1a1512;
     z-index: 1; opacity: 0; transition: opacity 0.4s ease;
     pointer-events: none;
   }
@@ -131,9 +169,9 @@
   }
   #skipIntroBtn:hover { background: rgba(0,0,0,0.6); }
 
+  /* ============ 游戏界面 ============ */
   #gameScreen { background: #f6f1ea; overflow-y: auto; padding: 20px; }
   #app { max-width: 1040px; margin: 0 auto; }
-
   #topbar {
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 18px; padding: 14px 70px 14px 20px;
@@ -142,14 +180,12 @@
   }
   #topbar h1 { font-size: 20px; font-weight: 700; }
   #status { display: flex; gap: 14px; font-size: 14px; color: #7a6a5c; flex-wrap: wrap; }
-
   #layout { display: grid; grid-template-columns: 240px 1fr; gap: 16px; }
   #panel {
     background: #fffdfa; border: 1px solid #e8dfd3; border-radius: 16px;
     padding: 16px; height: fit-content;
   }
   #panel h2 { font-size: 14px; color: #7a6a5c; margin-bottom: 12px; font-weight: 600; }
-
   .stat { margin-bottom: 9px; }
   .stat-top { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 3px; }
   .stat-name { color: #5a4a3c; }
@@ -161,9 +197,7 @@
   .stat-value.expression-val { color: #7c3aed; font-weight: 600; }
   .stat-bar { height: 6px; background: #efe7dc; border-radius: 4px; overflow: hidden; }
   .stat-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
-
   #main { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
-
   #log {
     min-height: 180px; max-height: 260px; overflow-y: auto;
     background: #fffdfa; border: 1px solid #e8dfd3; border-radius: 16px;
@@ -177,7 +211,6 @@
   .log-heart  { color: #e74c3c; font-weight: 600; }
   .log-express{ color: #7c3aed; font-weight: 600; }
   .log-fame   { color: #d97706; font-weight: 600; }
-
   .panel {
     background: #fffdfa; border: 1px solid #e8dfd3; border-radius: 16px;
     padding: 18px;
@@ -203,8 +236,6 @@
   }
   .video-slot .video-hint strong { display: block; font-size: 15px; margin-bottom: 4px; }
   .video-slot .video-hint small { font-size: 11px; opacity: 0.7; }
-  /* CSS 备份：视频播放时隐藏提示 */
-  .video-slot.playing .video-hint { display: none; }
   .video-slot .skip-btn {
     position: absolute; top: 8px; right: 8px; z-index: 10;
     padding: 5px 12px; font-size: 12px; font-family: inherit;
@@ -227,7 +258,6 @@
   .slot-content { font-size: 13px; color: #4a3c30; font-weight: 600; }
   .slot.filled .slot-content { color: #a0612f; }
   .slot-remove { font-size: 11px; color: #b0998a; }
-
   .actions-title { font-size: 13px; color: #7a6a5c; margin-bottom: 10px; font-weight: 600; }
   .actions-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 16px; }
   .actions-grid button {
@@ -240,10 +270,7 @@
     background: #f9f2e8; border-color: #c98d5e; transform: translateY(-1px);
   }
   .actions-grid button:disabled { opacity: 0.35; cursor: not-allowed; }
-
-  .executing-hint {
-    text-align: center; padding: 30px; color: #9a8a7c; font-size: 14px;
-  }
+  .executing-hint { text-align: center; padding: 30px; color: #9a8a7c; font-size: 14px; }
 
   #gameSettingsBtn, #menuSettingsBtn {
     position: fixed; top: 26px; right: 26px;
@@ -293,13 +320,11 @@
     min-width: 28px; text-align: center; font-size: 14px;
     color: #7a6a5c; font-variant-numeric: tabular-nums; font-weight: 600;
   }
-
   #endingStats {
     font-size: 13px; color: #7a6a5c; margin-bottom: 8px;
     padding: 10px 0; border-top: 1px dashed #e8dfd3;
     line-height: 1.7;
   }
-
   .video-collection {
     display: grid; grid-template-columns: repeat(2,1fr); gap: 10px;
     margin-top: 6px;
@@ -326,10 +351,6 @@
     transition: transform 0.15s;
   }
   #petBody:active { transform: scale(0.92); }
-  @keyframes bob {
-    0%,100% { transform: translateY(0) rotate(-2deg); }
-    50%     { transform: translateY(-9px) rotate(2deg); }
-  }
   #petBubble {
     position: absolute; bottom: 100%; right: 0; margin-bottom: 10px;
     background: #fffdfa; color: #4a3c30;
@@ -339,7 +360,6 @@
     animation: pop 0.2s ease;
     max-width: 220px; white-space: normal; text-align: center;
   }
-
   #toast {
     position: fixed; left: 50%; top: 30px;
     transform: translateX(-50%);
@@ -368,11 +388,21 @@
 </head>
 <body>
 
-<div id="menuScreen" class="screen">
+<!-- ============ 加载屏 ============ -->
+<div id="loadingScreen">
+  <div class="loading-box">
+    <div class="loading-cat">🐱</div>
+    <div class="loading-title">猫猫正在准备素材…</div>
+    <div class="loading-bar-wrap"><div class="loading-bar" id="loadingBar"></div></div>
+    <div class="loading-text" id="loadingText">0 / 27</div>
+    <button class="loading-skip" onclick="skipPreload()">跳过加载直接开始</button>
+  </div>
+</div>
+
+<!-- ============ 主菜单 ============ -->
+<div id="menuScreen" class="screen hidden">
   <video class="menu-cat-bg" id="menuIdleVideo" autoplay loop muted playsinline
-         onerror="this.style.display='none'; document.getElementById('menuCatFallback').style.display='flex';">
-    <source src="assets/video/idle.mp4" type="video/mp4">
-  </video>
+         onerror="this.style.display='none'; document.getElementById('menuCatFallback').style.display='flex';"></video>
   <div id="menuCatFallback" class="menu-cat-bg" style="display:none;">🐱</div>
   <div class="menu-content">
     <h1>猫猫设计生</h1>
@@ -385,6 +415,7 @@
   </div>
 </div>
 
+<!-- ============ 存档选择 ============ -->
 <div id="saveSelectScreen" class="screen hidden">
   <div class="save-box">
     <h2>选择存档</h2>
@@ -396,14 +427,14 @@
   </div>
 </div>
 
+<!-- ============ 开场动画 ============ -->
 <div id="introScreen" class="screen hidden">
-  <video id="introVideo" autoplay muted playsinline>
-    <source src="assets/video/intro.mp4" type="video/mp4">
-  </video>
+  <video id="introVideo" autoplay muted playsinline></video>
   <div id="introText"></div>
   <button id="skipIntroBtn" onclick="endIntro()">跳过</button>
 </div>
 
+<!-- ============ 游戏界面 ============ -->
 <div id="gameScreen" class="screen hidden">
   <div id="app">
     <header id="topbar">
@@ -471,14 +502,15 @@
   </div>
 </div>
 
-<button id="menuSettingsBtn" onclick="openSettings()" title="设置">⚙️</button>
+<button id="menuSettingsBtn" class="hidden" onclick="openSettings()" title="设置">⚙️</button>
 <button id="gameSettingsBtn" class="hidden" onclick="openSettings()" title="设置">⚙️</button>
 
-<div id="pet">
+<div id="pet" class="hidden">
   <div id="petBubble" class="hidden"></div>
   <div id="petBody">🐱</div>
 </div>
 
+<!-- ============ 事件弹窗 ============ -->
 <div id="eventModal" class="modal hidden">
   <div class="modal-box">
     <div class="video-slot hidden" id="eventVideoSlot">
@@ -493,6 +525,7 @@
   </div>
 </div>
 
+<!-- ============ 结局弹窗 ============ -->
 <div id="endingModal" class="modal hidden">
   <div class="modal-box">
     <div class="video-slot" id="endingVideoSlot">
@@ -509,6 +542,7 @@
   </div>
 </div>
 
+<!-- ============ 设置弹窗 ============ -->
 <div id="settingsModal" class="modal hidden">
   <div class="modal-box settings-box">
     <h3>设置</h3>
@@ -525,6 +559,7 @@
   </div>
 </div>
 
+<!-- ============ 收集弹窗 ============ -->
 <div id="collectionModal" class="modal hidden">
   <div class="modal-box">
     <h3>已收集视频</h3>
@@ -536,7 +571,7 @@
 
 <script>
 /* ================================================================
-   全局
+   全局变量
    ================================================================ */
 let state = null;
 let phase = 'idle';
@@ -549,17 +584,22 @@ let masterVolume = 5;
 let unlockedVideos = [];
 let currentSlot = 1;
 
-/* ★ 全局视频注册表：用于音量同步和清理 */
 const activeVideos = [];
+const videoBlobs = {};
+let preloadDone = false;
+let preloadAborted = false;
 
 const SAVE_SLOT_KEYS = [
-  'catDesignGameSave_v10_slot1',
-  'catDesignGameSave_v10_slot2',
-  'catDesignGameSave_v10_slot3'
+  'catDesignGameSave_v11_slot1',
+  'catDesignGameSave_v11_slot2',
+  'catDesignGameSave_v11_slot3'
 ];
 const VOLUME_KEY = 'catDesignGameVolume';
-const COLLECT_KEY = 'catDesignGameCollection_v10';
+const COLLECT_KEY = 'catDesignGameCollection_v11';
 
+/* ================================================================
+   游戏数据
+   ================================================================ */
 const INITIAL = {
   software: 10, design: 10, expression: 35, inspiration: 50,
   fame: 0, money: 100, fullness: 80, energy: 100,
@@ -610,6 +650,9 @@ const VIDEO_LIBRARY = {
   end_independent: { name: '结局·独立的猫',         file: 'end_independent.mp4' }
 };
 
+/* ================================================================
+   行动数据
+   ================================================================ */
 const ACTIONS = [
   { key: '学习软件', cost: { energy: 15 }, gain: { software: 3, design: 1, expression: 5 },
     inspCost: 10, inspBoost: { software: 5, design: 2, expression: 5 },
@@ -637,6 +680,9 @@ const ACTIONS = [
     videoId: 'act_can', human: '猫猫吃罐头吃得吧唧吧唧。', cat: '你吃了罐罐，精神满满。' }
 ];
 
+/* ================================================================
+   事件数据
+   ================================================================ */
 const EVENTS = [
   { id: 'crash', title: '软件崩溃', weight: 1, videoId: 'ev_crash',
     text: '渲染到 90%，软件突然闪退。你盯着屏幕，尾巴僵在半空。',
@@ -939,7 +985,7 @@ function showToast(msg) {
 }
 
 /* ================================================================
-   ★ 音量控制（所有视频统一管理）
+   音量控制
    ================================================================ */
 function applyVolumeToVideo(videoEl) {
   if (!videoEl) return;
@@ -953,14 +999,85 @@ function applyVolumeToVideo(videoEl) {
 }
 function syncAllVideosVolume() {
   activeVideos.forEach(v => {
-    /* 主菜单循环视频始终静音 */
     if (v.id === 'menuIdleVideo' || v.classList.contains('menu-cat-bg')) {
-      v.muted = true;
-      v.volume = 0;
-      return;
+      v.muted = true; v.volume = 0; return;
     }
     applyVolumeToVideo(v);
   });
+}
+
+/* ================================================================
+   视频预加载
+   ================================================================ */
+async function preloadAllVideos() {
+  const ids = Object.keys(VIDEO_LIBRARY);
+  const total = ids.length + 2;
+  let loaded = 0;
+
+  function updateProgress() {
+    loaded++;
+    const pct = Math.round((loaded / total) * 100);
+    document.getElementById('loadingBar').style.width = pct + '%';
+    document.getElementById('loadingText').textContent = loaded + ' / ' + total;
+  }
+
+  /* idle.mp4 */
+  try {
+    const resp = await fetch('assets/video/idle.mp4');
+    if (resp.ok) {
+      const blob = await resp.blob();
+      videoBlobs['__idle__'] = URL.createObjectURL(blob);
+      const idle = document.getElementById('menuIdleVideo');
+      if (idle) { idle.src = videoBlobs['__idle__']; idle.play().catch(() => {}); }
+    } else {
+      /* idle 不存在时显示 emoji 兜底 */
+      const idle = document.getElementById('menuIdleVideo');
+      if (idle) idle.style.display = 'none';
+      const fb = document.getElementById('menuCatFallback');
+      if (fb) fb.style.display = 'flex';
+    }
+  } catch (e) {
+    const idle = document.getElementById('menuIdleVideo');
+    if (idle) idle.style.display = 'none';
+    const fb = document.getElementById('menuCatFallback');
+    if (fb) fb.style.display = 'flex';
+  }
+  updateProgress();
+
+  /* intro.mp4 */
+  try {
+    const resp = await fetch('assets/video/intro.mp4');
+    if (resp.ok) {
+      const blob = await resp.blob();
+      videoBlobs['__intro__'] = URL.createObjectURL(blob);
+    }
+  } catch (e) {}
+  updateProgress();
+
+  /* 所有其他视频 */
+  for (const id of ids) {
+    if (preloadAborted) break;
+    const v = VIDEO_LIBRARY[id];
+    try {
+      const resp = await fetch('assets/video/' + v.file);
+      if (resp.ok) {
+        const blob = await resp.blob();
+        videoBlobs[id] = URL.createObjectURL(blob);
+      }
+    } catch (e) {}
+    updateProgress();
+  }
+
+  preloadDone = true;
+  finishPreload();
+}
+function finishPreload() {
+  document.getElementById('loadingScreen').classList.add('hidden');
+  showScreen('menu');
+}
+function skipPreload() {
+  preloadAborted = true;
+  finishPreload();
 }
 
 /* ================================================================
@@ -1086,13 +1203,13 @@ function closeCollection() {
 }
 
 /* ================================================================
-   ★ 视频播放核心（修复提示遮挡 + 音画同步 + 音量实时）
+   视频播放核心
    ================================================================ */
 function playVideoThen(videoId, slotId, hintId, nextCallback, customText) {
   const slot = document.getElementById(slotId);
   const hint = document.getElementById(hintId);
 
-  /* 清理旧视频和跳过键 */
+  /* 清理旧内容 */
   slot.querySelectorAll('video, .skip-btn').forEach(el => {
     const idx = activeVideos.indexOf(el);
     if (idx !== -1) activeVideos.splice(idx, 1);
@@ -1100,12 +1217,18 @@ function playVideoThen(videoId, slotId, hintId, nextCallback, customText) {
     el.remove();
   });
 
-  /* ★ 直接隐藏视频提示，避免遮挡 */
   const hintEl = slot.querySelector('.video-hint');
-  if (hintEl) hintEl.style.display = 'none';
+  if (hintEl) hintEl.style.display = '';
 
   const v = VIDEO_LIBRARY[videoId];
-  const src = v ? 'assets/video/' + v.file : '';
+
+  /* 优先用 blob，否则回退文件路径 */
+  let src = '';
+  if (videoId && videoBlobs[videoId]) {
+    src = videoBlobs[videoId];
+  } else if (v) {
+    src = 'assets/video/' + v.file;
+  }
 
   const videoEl = document.createElement('video');
   videoEl.playsInline = true;
@@ -1140,26 +1263,24 @@ function playVideoThen(videoId, slotId, hintId, nextCallback, customText) {
 
   skipBtn.onclick = finish;
 
-  let realVideo = false;
-  videoEl.src = src;
-
-  /* ★ 等 canplaythrough，确保音画就绪再播 */
-  videoEl.addEventListener('canplaythrough', () => {
-    realVideo = true;
-    /* 重置播放位置，防止音画不同步 */
-    try { videoEl.currentTime = 0; } catch (e) {}
+  videoEl.addEventListener('playing', () => {
+    if (hintEl) hintEl.style.display = 'none';
+  });
+  videoEl.addEventListener('ended', finish);
+  videoEl.addEventListener('error', () => {
+    setTimeout(finish, 800);
+  });
+  videoEl.addEventListener('loadeddata', () => {
     videoEl.play().catch(() => {});
   }, { once: true });
 
-  videoEl.addEventListener('ended', finish);
-  videoEl.addEventListener('error', () => {
-    if (!realVideo) setTimeout(finish, 1200);
-  });
+  videoEl.src = src;
 
-  /* 兜底：2.5 秒还没加载成功就走模拟 */
   setTimeout(() => {
-    if (!realVideo && !done) setTimeout(finish, 800);
-  }, 2500);
+    if (!done && videoEl.readyState < 2) {
+      setTimeout(finish, 1000);
+    }
+  }, 3000);
 
   unlockVideo(videoId);
 }
@@ -1177,6 +1298,7 @@ function showScreen(name) {
 
   document.getElementById('menuSettingsBtn').classList.toggle('hidden', name !== 'menu');
   document.getElementById('gameSettingsBtn').classList.toggle('hidden', name !== 'game');
+  document.getElementById('pet').classList.toggle('hidden', name === 'menu' || name === 'saveSelect' || name === 'intro');
 }
 function showSaveSelect() {
   playTone(700, 0.07);
@@ -1185,12 +1307,10 @@ function showSaveSelect() {
 }
 function backToMenu() {
   playTone(500, 0.1);
-  /* ★ 清理所有正在播放的视频 */
   activeVideos.forEach(v => {
+    if (v.id === 'menuIdleVideo') return;
     try { v.pause(); } catch (e) {}
-    v.remove();
   });
-  activeVideos.length = 0;
   document.getElementById('endingModal').classList.add('hidden');
   document.getElementById('eventModal').classList.add('hidden');
   document.getElementById('collectionModal').classList.add('hidden');
@@ -1225,8 +1345,10 @@ function playIntro() {
   text.style.display = '';
   text.textContent = '';
   text.classList.remove('fade-in');
+
+  /* blob 或文件路径 */
+  video.src = videoBlobs['__intro__'] || 'assets/video/intro.mp4';
   applyVolumeToVideo(video);
-  /* 加到 activeVideos 以便音量同步 */
   if (activeVideos.indexOf(video) === -1) activeVideos.push(video);
 
   let videoOk = false;
@@ -1277,6 +1399,8 @@ function endIntro() {
   if (introTimer) { clearTimeout(introTimer); introTimer = null; }
   const video = document.getElementById('introVideo');
   try { video.pause(); } catch (e) {}
+  const idx = activeVideos.indexOf(video);
+  if (idx !== -1) activeVideos.splice(idx, 1);
   startGameWithNewState();
 }
 function startGameWithNewState() {
@@ -1330,7 +1454,7 @@ function closeSettings() {
 }
 
 /* ================================================================
-   UI
+   UI 渲染
    ================================================================ */
 function updateUI() {
   if (!state) return;
@@ -1370,7 +1494,6 @@ function updateUI() {
     statsEl.appendChild(div);
   });
 }
-
 function renderGameArea() {
   document.getElementById('idlePanel').classList.add('hidden');
   document.getElementById('schedulePanel').classList.add('hidden');
@@ -1386,7 +1509,6 @@ function renderGameArea() {
     document.getElementById('executingPanel').classList.remove('hidden');
   }
 }
-
 function getProjectedState() {
   let proj = { energy: state.energy, money: state.money };
   for (const s of schedule) {
@@ -1706,12 +1828,10 @@ function showEnding() {
 }
 function restart() {
   document.getElementById('endingModal').classList.add('hidden');
-  /* ★ 清理所有视频 */
   activeVideos.forEach(v => {
+    if (v.id === 'menuIdleVideo') return;
     try { v.pause(); } catch (e) {}
-    v.remove();
   });
-  activeVideos.length = 0;
   state = null;
   playTone(880, 0.1);
   showScreen('intro');
@@ -1758,7 +1878,6 @@ document.getElementById('volumeSlider').addEventListener('input', function () {
   document.getElementById('volumeValue').textContent = masterVolume;
   localStorage.setItem(VOLUME_KEY, masterVolume);
   playTone(700, 0.05);
-  /* ★ 实时同步所有正在播放的视频 */
   syncAllVideosVolume();
 });
 
@@ -1769,14 +1888,7 @@ loadVolume();
 loadCollection();
 document.getElementById('volumeSlider').value = masterVolume;
 document.getElementById('volumeValue').textContent = masterVolume;
-/* 主菜单视频加入注册表（始终静音） */
-const menuIdle = document.getElementById('menuIdleVideo');
-if (menuIdle) {
-  menuIdle.muted = true;
-  menuIdle.volume = 0;
-  activeVideos.push(menuIdle);
-}
-showScreen('menu');
+preloadAllVideos();
 </script>
 </body>
 </html>
